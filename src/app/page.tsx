@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Image from "next/image";
 import Navbar from '@/components/Navbar';
 import BillScanner from '@/components/BillScanner';
+import { FaWallet, FaArrowUp, FaArrowDown, FaChartPie, FaPlus, FaTrash, FaTrophy, FaMedal } from 'react-icons/fa';
+import RecentTransactionsChart from '@/components/RecentTransactionsChart';
 
 export default function Home() {
   const [transactions, setTransactions] = useState([
@@ -55,25 +57,37 @@ export default function Home() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-dark-card rounded-lg shadow-lg p-6">
-            <h2 className="text-dark-text text-lg font-semibold mb-2">Total Balance</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <FaWallet className="text-primary-blue text-xl" />
+              <h2 className="text-dark-text text-lg font-semibold">Total Balance</h2>
+            </div>
             <p className="text-primary-blue text-2xl font-bold">₹{totalBalance.toFixed(2)}</p>
             <p className="text-dark-text text-sm mt-2">Updated just now</p>
           </div>
 
           <div className="bg-dark-card rounded-lg shadow-lg p-6">
-            <h2 className="text-dark-text text-lg font-semibold mb-2">Monthly Income</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <FaArrowUp className="text-primary-green text-xl" />
+              <h2 className="text-dark-text text-lg font-semibold">Monthly Income</h2>
+            </div>
             <p className="text-primary-green text-2xl font-bold">₹{monthlyIncome.toFixed(2)}</p>
             <p className="text-dark-text text-sm mt-2">+12% from last month</p>
           </div>
 
           <div className="bg-dark-card rounded-lg shadow-lg p-6">
-            <h2 className="text-dark-text text-lg font-semibold mb-2">Monthly Expenses</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <FaArrowDown className="text-primary-red text-xl" />
+              <h2 className="text-dark-text text-lg font-semibold">Monthly Expenses</h2>
+            </div>
             <p className="text-primary-red text-2xl font-bold">₹{monthlyExpenses.toFixed(2)}</p>
             <p className="text-dark-text text-sm mt-2">-3% from last month</p>
           </div>
 
           <div className="bg-dark-card rounded-lg shadow-lg p-6">
-            <h2 className="text-dark-text text-lg font-semibold mb-2">Budget Status</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <FaChartPie className="text-primary-orange text-xl" />
+              <h2 className="text-dark-text text-lg font-semibold">Budget Status</h2>
+            </div>
             <p className="text-primary-orange text-2xl font-bold">75% Used</p>
             <p className="text-dark-text text-sm mt-2">₹1,350.00 remaining</p>
           </div>
@@ -123,8 +137,9 @@ export default function Home() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-primary-blue text-white rounded-lg py-2 hover:bg-blue-600 transition-colors"
+                className="w-full bg-primary-blue text-white rounded-lg py-2 hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
               >
+                <FaPlus />
                 Add Expense
               </button>
             </form>
@@ -157,9 +172,7 @@ export default function Home() {
                       onClick={() => handleRemoveTransaction(transaction.id)}
                       className="text-gray-400 hover:text-primary-red transition-colors"
                     >
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
+                      <FaTrash className="h-5 w-5" />
                     </button>
                   </div>
                 </div>
@@ -167,6 +180,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Recent Transactions Charts */}
+        <RecentTransactionsChart transactions={transactions} />
 
         {/* Bill Scanner Section */}
         <BillScanner />
@@ -180,7 +196,7 @@ export default function Home() {
               <div className="flex items-center justify-between py-3 border-b border-gray-700">
                 <div className="flex items-center">
                   <div className="rounded-full bg-primary-blue bg-opacity-20 p-2 mr-4">
-                    <span className="text-primary-blue font-bold">1</span>
+                    <FaTrophy className="text-primary-blue" />
                   </div>
                   <div>
                     <p className="text-dark-text font-medium">Sarah Johnson</p>
@@ -196,7 +212,7 @@ export default function Home() {
               <div className="flex items-center justify-between py-3 border-b border-gray-700">
                 <div className="flex items-center">
                   <div className="rounded-full bg-primary-blue bg-opacity-20 p-2 mr-4">
-                    <span className="text-primary-blue font-bold">2</span>
+                    <FaMedal className="text-primary-blue" />
                   </div>
                   <div>
                     <p className="text-dark-text font-medium">Mike Chen</p>

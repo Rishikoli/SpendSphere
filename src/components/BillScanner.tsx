@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { createWorker } from 'tesseract.js';
+import { FaUpload, FaCamera, FaRegTimesCircle, FaSave } from 'react-icons/fa';
 
 interface ExtractedExpense {
   amount: string;
@@ -183,16 +184,18 @@ export default function BillScanner() {
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="bg-primary-blue hover:bg-primary-blue/80 text-white px-6 py-3 rounded-lg font-medium"
+          className="bg-primary-blue hover:bg-primary-blue/80 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2"
           disabled={isProcessing || isCameraOpen}
         >
+          <FaUpload />
           {isProcessing ? 'Processing...' : 'Upload Bill'}
         </button>
         <button
           onClick={isCameraOpen ? stopCamera : startCamera}
-          className="bg-primary-green hover:bg-primary-green/80 text-white px-6 py-3 rounded-lg font-medium"
+          className="bg-primary-green hover:bg-primary-green/80 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2"
           disabled={isProcessing}
         >
+          {isCameraOpen ? <FaRegTimesCircle /> : <FaCamera />}
           {isCameraOpen ? 'Close Camera' : 'Open Camera'}
         </button>
       </div>
@@ -248,12 +251,13 @@ export default function BillScanner() {
           </div>
 
           <button
-            className="mt-6 w-full bg-primary-green hover:bg-primary-green/80 text-white px-4 py-2 rounded-lg font-medium"
+            className="mt-6 w-full bg-primary-green hover:bg-primary-green/80 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2"
             onClick={() => {
               // Here you can add logic to save the expense
               console.log('Saving expense:', extractedData);
             }}
           >
+            <FaSave />
             Save Expense
           </button>
         </div>
