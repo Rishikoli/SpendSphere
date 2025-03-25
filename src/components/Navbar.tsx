@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import RotatingText from './RotatingText';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
 export default function Navbar() {
@@ -15,7 +14,7 @@ export default function Navbar() {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Link href="/" className="text-2xl font-bold text-dark-text flex items-center gap-2">
-                SpendSphere <RotatingText texts={['Save Money']} interval={3000} />
+                SpendSphere
               </Link>
             </div>
           </div>

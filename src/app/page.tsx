@@ -3,6 +3,9 @@ import { useState } from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import BillScanner from "@/components/BillScanner";
+import ExpenseAnalytics from "@/components/ExpenseAnalytics";
+import AIBudgetRecommendations from "@/components/AIBudgetRecommendations";
+import BudgetPlanning from '@/components/BudgetPlanning';
 import {
   FaWallet,
   FaArrowUp,
@@ -13,11 +16,24 @@ import {
   FaTrophy,
   FaMedal,
 } from "react-icons/fa";
-import RecentTransactionsChart from "@/components/RecentTransactionsChart";
 
+interface Transaction {
+  id: number;
+  type: "expense" | "income";
+  title: string;
+  category: string;
+  amount: number;
+  date: Date;
+}
+
+interface NewExpense {
+  title: string;
+  amount: string;
+  category: string;
+}
 
 export default function Home() {
-  const [transactions, setTransactions] = useState([
+  const [transactions, setTransactions] = useState<Transaction[]>([
     {
       id: 1,
       type: "expense",
@@ -44,15 +60,15 @@ export default function Home() {
     },
   ]);
 
-  const [newExpense, setNewExpense] = useState({
+  const [newExpense, setNewExpense] = useState<NewExpense>({
     title: "",
     amount: "",
     category: "Other",
   });
 
-  const handleExpenseSubmit = (e) => {
+  const handleExpenseSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const expense = {
+    const expense: Transaction = {
       id: Date.now(),
       type: "expense",
       title: newExpense.title,
@@ -64,23 +80,23 @@ export default function Home() {
     setNewExpense({ title: "", amount: "", category: "Other" });
   };
 
-  const handleRemoveTransaction = (id) => {
+  const handleRemoveTransaction = (id: number) => {
     setTransactions(transactions.filter((t) => t.id !== id));
   };
 
   const totalBalance = transactions.reduce(
-    (acc, curr) =>
+    (acc: number, curr: Transaction) =>
       curr.type === "income" ? acc + curr.amount : acc - curr.amount,
     0
   );
 
   const monthlyIncome = transactions
-    .filter((t) => t.type === "income")
-    .reduce((acc, curr) => acc + curr.amount, 0);
+    .filter((t: Transaction) => t.type === "income")
+    .reduce((acc: number, curr: Transaction) => acc + curr.amount, 0);
 
   const monthlyExpenses = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((acc, curr) => acc + curr.amount, 0);
+    .filter((t: Transaction) => t.type === "expense")
+    .reduce((acc: number, curr: Transaction) => acc + curr.amount, 0);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
@@ -217,6 +233,25 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Expense Analytics Section */}
+        <div className="mt-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <ExpenseAnalytics transactions={transactions} />
+            {/* <BudgetInsights budgets={budgets} /> */}
+          </div>
+
+          <div className="mb-6">
+            <BudgetPlanning 
+              transactions={transactions}
+              monthlyIncome={monthlyIncome}
+            />
+          </div>
+
+          <div className="mb-6">
+            <AIBudgetRecommendations transactions={transactions} monthlyIncome={monthlyIncome} />
+          </div>
+        </div>
+
         {/* Recent Transactions Section */}
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-dark-text mb-6">
@@ -224,7 +259,7 @@ export default function Home() {
           </h2>
           <div className="bg-dark-card rounded-lg shadow-lg overflow-hidden">
             <div className="p-6">
-              {transactions.map((transaction) => (
+              {transactions.map((transaction: Transaction) => (
                 <div
                   key={transaction.id}
                   className="flex items-center justify-between py-3 border-b border-gray-700"
@@ -287,9 +322,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Recent Transactions Charts */}
-        <RecentTransactionsChart transactions={transactions} />
 
         {/* Bill Scanner Section */}
         <BillScanner />

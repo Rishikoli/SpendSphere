@@ -1,37 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SpendSphere - Smart Financial Management
 
-## Getting Started
+SpendSphere is a modern financial management application built with Next.js, featuring AI-powered budget recommendations and real-time expense tracking.
 
-First, run the development server:
+## 🌟 Features
 
+- 📊 Interactive Dashboard with Real-time Analytics
+- 🤖 AI-Powered Budget Recommendations
+- 💰 Expense Tracking and Categorization
+- 📈 Visual Data Representation with Recharts
+- 🧠 Neural Network Animated Interface
+- 🔄 Real-time Data Updates
+- 📱 Responsive Design
+
+## 🚀 Quick Start
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/spendsphere.git
+cd spendsphere
+```
+
+2. Create environment files:
+
+Create `.env.development` with these variables:
+```env
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+NEXT_PUBLIC_GEMINI_MODEL=gemini-2-flash  # Specific Gemini model for better performance
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+> **Note**: This project uses the `gemini-2-flash` model for faster and more efficient AI recommendations. Make sure you have access to this model in your Gemini API subscription.
+
+Create `.env.production` with production values.
+
+3. Install dependencies:
+```bash
+# Install core dependencies
+npm install next@14 react react-dom typescript @types/react @types/node
+
+# Install UI and styling dependencies
+npm install tailwindcss postcss autoprefixer @heroicons/react recharts
+
+# Install animation and icon dependencies
+npm install react-icons framer-motion
+
+# Install AI and utility dependencies
+npm install @google/generative-ai date-fns
+
+# Or install everything at once
+npm install next@14 react react-dom typescript @types/react @types/node tailwindcss postcss autoprefixer @heroicons/react recharts react-icons framer-motion @google/generative-ai date-fns
+```
+
+4. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework:** Next.js 14 with App Router
+- **Styling:** Tailwind CSS
+- **Charts:** Recharts
+- **AI Integration:** Google Gemini API
+- **Animations:** Custom SVG Animations
+- **State Management:** React Hooks
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## 📚 Documentation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Project Presentation (PPT)](./ppt/SpendSphere.pptx)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## 🎯 Key Features in Detail
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### AI Budget Recommendations
+- Analyzes spending patterns
+- Provides personalized budget allocations
+- Adjusts recommendations based on financial behavior
+- Real-time updates with dynamic variations
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# SpendSphere
+### Neural Network Interface
+- Interactive background animations
+- Responsive to user interactions
+- Dynamic node connections
+- Smooth transitions and effects
+
+### Expense Analytics
+- Real-time transaction tracking
+- Category-wise breakdown
+- Visual representations
+- Trend analysis

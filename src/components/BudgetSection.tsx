@@ -1,5 +1,6 @@
 import React from 'react';
 import BudgetCard from './BudgetCard';
+import BudgetInsights from './BudgetInsights';
 import { FaShoppingCart, FaHome, FaCar, FaUtensils, FaPlane } from 'react-icons/fa';
 
 const BudgetSection: React.FC = () => {
@@ -40,6 +41,9 @@ const BudgetSection: React.FC = () => {
   return (
     <section className="p-6 bg-dark-background">
       <h2 className="text-2xl font-bold text-dark-text mb-6">Budget Overview</h2>
+      <div className="mb-6">
+        <BudgetInsights budgets={budgets} />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {budgets.map((budget, index) => (
           <BudgetCard
