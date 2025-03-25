@@ -16,8 +16,10 @@ SpendSphere is a modern financial management application built with Next.js, fea
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/spendsphere.git
+git clone https://github.com/Rishikoli/SpendSphere.git
 cd spendsphere
+npm install
+npm run dev
 ```
 
 2. Create environment files:
