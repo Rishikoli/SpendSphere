@@ -273,28 +273,50 @@ export default function SpendingCharts({
   }, [monthlyData, categoryData, budgetData, revenueData]);
 
   return (
-    <div className="relative grid grid-cols-1 gap-6 mt-8">
-      <OrbBackground />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Monthly Spending Trends */}
-        <div className="bg-dark-card rounded-lg shadow-lg p-6 w-full">
+    <div className="space-y-6 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-dark-card p-4 rounded-lg flex items-center space-x-3">
+          <FaWallet className="text-2xl text-primary-blue" />
+          <div>
+            <p className="text-dark-text text-sm">Total Balance</p>
+            <p className="text-lg font-semibold text-dark-text">$5,240.00</p>
+          </div>
+        </div>
+        <div className="bg-dark-card p-4 rounded-lg flex items-center space-x-3">
+          <FaArrowUp className="text-2xl text-green-500" />
+          <div>
+            <p className="text-dark-text text-sm">Income</p>
+            <p className="text-lg font-semibold text-dark-text">$3,240.00</p>
+          </div>
+        </div>
+        <div className="bg-dark-card p-4 rounded-lg flex items-center space-x-3">
+          <FaArrowDown className="text-2xl text-red-500" />
+          <div>
+            <p className="text-dark-text text-sm">Expenses</p>
+            <p className="text-lg font-semibold text-dark-text">$2,140.00</p>
+          </div>
+        </div>
+        <div className="bg-dark-card p-4 rounded-lg flex items-center space-x-3 cursor-pointer hover:bg-dark-cardHover transition-colors">
+          <FaPlus className="text-2xl text-primary-purple" />
+          <div>
+            <p className="text-dark-text text-sm">Add Transaction</p>
+            <p className="text-xs text-dark-text opacity-75">Quick Entry</p>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-dark-card p-4 rounded-lg">
           <canvas ref={monthlyChartRef} />
         </div>
-
-        {/* Category-wise Spending */}
-        <div className="bg-dark-card rounded-lg shadow-lg p-6 w-full">
+        <div className="bg-dark-card p-4 rounded-lg">
           <canvas ref={categoryChartRef} />
         </div>
-      </div>
-
-      {/* Budget vs Actual */}
-      <div className="bg-dark-card rounded-lg shadow-lg p-6">
-        <canvas ref={budgetChartRef} />
-      </div>
-
-      {/* Revenue Breakdown */}
-      <div className="bg-dark-card rounded-lg shadow-lg p-6">
-        <canvas ref={revenueChartRef} />
+        <div className="bg-dark-card p-4 rounded-lg">
+          <canvas ref={budgetChartRef} />
+        </div>
+        <div className="bg-dark-card p-4 rounded-lg">
+          <canvas ref={revenueChartRef} />
+        </div>
       </div>
     </div>
   );
