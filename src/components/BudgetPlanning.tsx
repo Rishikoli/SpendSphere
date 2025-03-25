@@ -46,7 +46,7 @@ const BudgetPlanning: React.FC<BudgetPlanningProps> = ({ transactions, monthlyIn
       const timer = setTimeout(() => setIsUpdating(false), 1000);
       return () => clearTimeout(timer);
     }
-  }, [transactions, monthlyIncome, generateAIBudget]);
+  }, [transactions, monthlyIncome]);
 
   const generateAIBudget = () => {
     // Calculate category-wise spending
@@ -61,8 +61,6 @@ const BudgetPlanning: React.FC<BudgetPlanningProps> = ({ transactions, monthlyIn
     const totalSpending = Object.values(categorySpending).reduce((a, b) => a + b, 0);
     const spendingRate = totalSpending / monthlyIncome;
 
-    // Adjust base percentages based on spending rate
-    const spendingAdjustment = spendingRate > 0.8 ? 0.9 : spendingRate < 0.5 ? 1.1 : 1;
     // Get current date for budget period
     const today = new Date();
     const startDate = today.toISOString().split('T')[0];
