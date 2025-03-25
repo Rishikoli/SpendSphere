@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import OrbBackground from './Orb';
 import Chart from 'chart.js/auto';
 import { FaWallet, FaArrowUp, FaArrowDown, FaChartPie, FaPlus, FaTrash, FaTrophy, FaMedal } from 'react-icons/fa';
 
@@ -272,7 +273,8 @@ export default function SpendingCharts({
   }, [monthlyData, categoryData, budgetData, revenueData]);
 
   return (
-    <div className="grid grid-cols-1 gap-6 mt-8">
+    <div className="relative grid grid-cols-1 gap-6 mt-8">
+      <OrbBackground />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Spending Trends */}
         <div className="bg-dark-card rounded-lg shadow-lg p-6 w-full">
