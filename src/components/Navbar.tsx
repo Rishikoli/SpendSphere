@@ -3,6 +3,14 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import RotatingText from './RotatingText';
+
+const rotatingTexts = [
+  "Track your expenses with ease",
+  "Get AI-powered budget insights",
+  "Plan your financial future",
+  "Manage your money wisely",
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +24,20 @@ export default function Navbar() {
               <Link href="/" className="text-2xl font-bold text-dark-text flex items-center gap-2">
                 SpendSphere
               </Link>
+            </div>
+            <div className="text-gray-500 dark:text-gray-400">
+              <RotatingText
+                texts={rotatingTexts}
+                rotationInterval={3000}
+                staggerDuration={0.02}
+                splitBy="words"
+                mainClassName="text-sm"
+                elementLevelClassName="opacity-80"
+                transition={{ type: "spring", damping: 20, stiffness: 200 }}
+                initial={{ y: "50%", opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: "-50%", opacity: 0 }}
+              />
             </div>
           </div>
           

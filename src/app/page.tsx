@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import BillScanner from "@/components/BillScanner";
 import ExpenseAnalytics from "@/components/ExpenseAnalytics";
 import AIBudgetRecommendations from "@/components/AIBudgetRecommendations";
-import BudgetPlanning from '@/components/BudgetPlanning';
+import AIBudgetPlanner from "@/components/AIBudgetPlanner";
+import FinanceBot from '@/components/FinanceBot';
 import {
   FaWallet,
   FaArrowUp,
@@ -66,6 +67,10 @@ export default function Home() {
     category: "Other",
   });
 
+  const [geminiApiKey, setGeminiApiKey] = useState<string>(
+    process.env.NEXT_PUBLIC_GEMINI_API_KEY || ''
+  );
+
   const handleExpenseSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const expense: Transaction = {
@@ -78,6 +83,16 @@ export default function Home() {
     };
     setTransactions([expense, ...transactions]);
     setNewExpense({ title: "", amount: "", category: "Other" });
+    
+    // Trigger FinanceBot analysis for the new expense
+    const financeBot = document.getElementById('finance-bot-input') as HTMLInputElement;
+    if (financeBot) {
+      financeBot.value = `Analyze my recent ${expense.category} expense of ₹${expense.amount} for ${expense.title} and provide budgeting advice.`;
+      const submitButton = financeBot.nextElementSibling as HTMLButtonElement;
+      if (submitButton) {
+        submitButton.click();
+      }
+    }
   };
 
   const handleRemoveTransaction = (id: number) => {
@@ -207,20 +222,34 @@ export default function Home() {
                 <label htmlFor="category" className="block text-dark-text mb-2">
                   Category
                 </label>
-                <select
-                  id="category"
-                  value={newExpense.category}
-                  onChange={(e) =>
-                    setNewExpense({ ...newExpense, category: e.target.value })
-                  }
-                  className="w-full bg-dark-background text-dark-text rounded-lg p-2 border border-gray-700 focus:outline-none focus:border-primary-blue"
-                >
-                  <option value="Other">Other</option>
-                  <option value="Food">Food</option>
-                  <option value="Entertainment">Entertainment</option>
-                  <option value="Bills">Bills</option>
-                  <option value="Transportation">Transportation</option>
-                </select>
+                <div className="relative">
+                  <select
+                    id="category"
+                    value={newExpense.category}
+                    onChange={(e) =>
+                      setNewExpense({ ...newExpense, category: e.target.value })
+                    }
+                    className="w-full bg-dark-background text-dark-text rounded-lg p-2 border border-gray-700 focus:outline-none focus:border-primary-blue focus:ring-1 focus:ring-primary-blue appearance-none"
+                    style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+                  >
+                    <option value="Other" className="bg-dark-background text-dark-text">Other</option>
+                    <option value="Housing" className="bg-dark-background text-dark-text">Housing</option>
+                    <option value="Food" className="bg-dark-background text-dark-text">Food</option>
+                    <option value="Entertainment" className="bg-dark-background text-dark-text">Entertainment</option>
+                    <option value="Transportation" className="bg-dark-background text-dark-text">Transportation</option>
+                    <option value="Utilities" className="bg-dark-background text-dark-text">Utilities</option>
+                    <option value="Savings" className="bg-dark-background text-dark-text">Savings</option>
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-dark-text">
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                    </svg>
+                  </div>
+                </div>
               </div>
               <button
                 type="submit"
@@ -233,24 +262,59 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Bill Scanner Section */}
+        <div className="mb-6">
+          <BillScanner />
+        </div>
+
+        {/* AI Budget Planner */}
+        <div className="mb-6">
+          <AIBudgetPlanner 
+            transactions={transactions}
+            monthlyIncome={monthlyIncome}
+            apiKey={geminiApiKey}
+          />
+        </div>
+
+        {/* AI Budget Recommendations */}
+        <div className="mb-6">
+          <AIBudgetRecommendations 
+            transactions={transactions} 
+            monthlyIncome={monthlyIncome} 
+            apiKey={geminiApiKey}
+          />
+        </div>
+
         {/* Expense Analytics Section */}
         <div className="mt-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <ExpenseAnalytics transactions={transactions} />
-            {/* <BudgetInsights budgets={budgets} /> */}
-          </div>
-
-          <div className="mb-6">
-            <BudgetPlanning 
-              transactions={transactions}
-              monthlyIncome={monthlyIncome}
-            />
-          </div>
-
-          <div className="mb-6">
-            <AIBudgetRecommendations transactions={transactions} monthlyIncome={monthlyIncome} />
-          </div>
+          <ExpenseAnalytics transactions={transactions} />
         </div>
+
+        {/* Finance Bot */}
+        <div>
+          <FinanceBot 
+            transactions={transactions}
+            monthlyIncome={monthlyIncome}
+            apiKey={geminiApiKey}
+          />
+        </div>
+
+        {!geminiApiKey && (
+          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-6">
+            <p className="text-yellow-500">
+              Please set your Gemini API key in the environment variables to enable the AI Finance Assistant.
+              You can get one from{' '}
+              <a 
+                href="https://makersuite.google.com/app/apikey" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Google AI Studio
+              </a>
+            </p>
+          </div>
+        )}
 
         {/* Recent Transactions Section */}
         <div className="mt-12">
@@ -322,9 +386,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Bill Scanner Section */}
-        <BillScanner />
 
         {/* Leaderboard Section */}
         <div className="mt-12">

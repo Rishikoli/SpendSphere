@@ -1,301 +1,126 @@
-'use client';
-
-import { useEffect, useRef } from 'react';
-import OrbBackground from './Orb';
-import Chart from 'chart.js/auto';
-import { FaWallet, FaArrowUp, FaArrowDown, FaChartPie, FaPlus, FaTrash, FaTrophy, FaMedal } from 'react-icons/fa';
-
-interface SpendingData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    backgroundColor?: string[];
-    borderColor?: string;
-    borderWidth?: number;
-    fill?: boolean;
-  }[];
-}
+import React from 'react';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js/auto';
+import { useTheme } from 'next-themes';
 
 interface SpendingChartsProps {
-  monthlyData: SpendingData;
-  categoryData: SpendingData;
-  budgetData: SpendingData;
-  revenueData: SpendingData;
+  transactions: {
+    type: 'expense' | 'income';
+    title: string;
+    category: string;
+    amount: number;
+    date: Date | string;
+  }[];
+  monthlyIncome: number;
+  monthlyBudget: number;
 }
 
-// Sample data for demonstration
-const sampleMonthlyData: SpendingData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  datasets: [{
-    label: 'Monthly Spending',
-    data: [1200, 1350, 980, 1450, 1100, 1300],
-    borderColor: '#3B82F6',
-    borderWidth: 2,
-    fill: false
-  }]
+type CategoryColors = {
+  [key: string]: {
+    light: string;
+    dark: string;
+  };
 };
 
-const sampleCategoryData: SpendingData = {
-  labels: ['Housing', 'Food', 'Transportation', 'Entertainment', 'Utilities', 'Others'],
-  datasets: [{
-    label: 'Spending by Category',
-    data: [800, 400, 200, 150, 250, 100],
-    backgroundColor: [
-      '#3B82F6',
-      '#10B981',
-      '#F59E0B',
-      '#EF4444',
-      '#8B5CF6',
-      '#EC4899'
-    ]
-  }]
+type CategoryBorders = {
+  [key: string]: string;
 };
 
-const sampleBudgetData: SpendingData = {
-  labels: ['Housing', 'Food', 'Transportation', 'Entertainment', 'Utilities', 'Others'],
-  datasets: [
-    {
-      label: 'Budget',
-      data: [1000, 500, 300, 200, 300, 200],
-      backgroundColor: '#3B82F6'
-    },
-    {
-      label: 'Actual',
-      data: [800, 400, 200, 150, 250, 100],
-      backgroundColor: '#10B981'
-    }
-  ]
+const categoryColors: CategoryColors = {
+  Housing: { light: 'rgba(255, 99, 132, 0.8)', dark: 'rgba(255, 99, 132, 0.5)' },
+  Food: { light: 'rgba(54, 162, 235, 0.8)', dark: 'rgba(54, 162, 235, 0.5)' },
+  Transportation: { light: 'rgba(255, 206, 86, 0.8)', dark: 'rgba(255, 206, 86, 0.5)' },
+  Entertainment: { light: 'rgba(75, 192, 192, 0.8)', dark: 'rgba(75, 192, 192, 0.5)' },
+  Savings: { light: 'rgba(153, 102, 255, 0.8)', dark: 'rgba(153, 102, 255, 0.5)' },
+  Utilities: { light: 'rgba(255, 159, 64, 0.8)', dark: 'rgba(255, 159, 64, 0.5)' },
+  Other: { light: 'rgba(128, 128, 128, 0.8)', dark: 'rgba(128, 128, 128, 0.5)' }
 };
 
-const sampleRevenueData: SpendingData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  datasets: [
-    {
-      label: 'Salary',
-      data: [4500, 4500, 4500, 4800, 4800, 4800],
-      backgroundColor: '#22C55E',
-      borderColor: '#22C55E',
-      borderWidth: 2
-    },
-    {
-      label: 'Freelance',
-      data: [800, 1200, 600, 900, 1500, 1000],
-      backgroundColor: '#10B981',
-      borderColor: '#10B981',
-      borderWidth: 2
-    },
-    {
-      label: 'Investments',
-      data: [200, 250, 180, 300, 280, 350],
-      backgroundColor: '#34D399',
-      borderColor: '#34D399',
-      borderWidth: 2
-    }
-  ]
+const categoryBorders: CategoryBorders = {
+  Housing: 'rgba(255, 99, 132, 1)',
+  Food: 'rgba(54, 162, 235, 1)',
+  Transportation: 'rgba(255, 206, 86, 1)',
+  Entertainment: 'rgba(75, 192, 192, 1)',
+  Savings: 'rgba(153, 102, 255, 1)',
+  Utilities: 'rgba(255, 159, 64, 1)',
+  Other: 'rgba(128, 128, 128, 1)'
 };
 
 export default function SpendingCharts({
-  monthlyData = sampleMonthlyData,
-  categoryData = sampleCategoryData,
-  budgetData = sampleBudgetData,
-  revenueData = sampleRevenueData
+  transactions,
+  monthlyIncome,
+  monthlyBudget,
 }: SpendingChartsProps) {
-  const monthlyChartRef = useRef<HTMLCanvasElement>(null);
-  const categoryChartRef = useRef<HTMLCanvasElement>(null);
-  const budgetChartRef = useRef<HTMLCanvasElement>(null);
-  const revenueChartRef = useRef<HTMLCanvasElement>(null);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
-  useEffect(() => {
-    // Monthly Spending Trend Line Chart
-    if (monthlyChartRef.current) {
-      const ctx = monthlyChartRef.current.getContext('2d');
-      if (ctx) {
-        new Chart(ctx, {
-          type: 'line',
-          data: monthlyData,
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'Monthly Spending Trends',
-                color: '#E5E7EB'
-              },
-              legend: {
-                labels: {
-                  color: '#E5E7EB'
-                }
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                grid: {
-                  color: '#374151'
-                },
-                ticks: {
-                  color: '#E5E7EB'
-                }
-              },
-              x: {
-                grid: {
-                  color: '#374151'
-                },
-                ticks: {
-                  color: '#E5E7EB'
-                }
-              }
-            }
-          }
-        });
-      }
-    }
+  // Calculate spending by category
+  const spendingByCategory = transactions
+    .filter(t => t.type === 'expense')
+    .reduce((acc, transaction) => {
+      const { category, amount } = transaction;
+      acc[category] = (acc[category] || 0) + amount;
+      return acc;
+    }, {} as { [key: string]: number });
 
-    // Category-wise Spending Pie Chart
-    if (categoryChartRef.current) {
-      const ctx = categoryChartRef.current.getContext('2d');
-      if (ctx) {
-        new Chart(ctx, {
-          type: 'pie',
-          data: categoryData,
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'Spending by Category',
-                color: '#E5E7EB'
-              },
-              legend: {
-                position: 'right',
-                labels: {
-                  color: '#E5E7EB'
-                }
-              }
-            }
-          }
-        });
-      }
-    }
+  // Prepare data for the chart
+  const chartData = {
+    labels: Object.keys(spendingByCategory),
+    datasets: [
+      {
+        label: 'Spending by Category',
+        data: Object.values(spendingByCategory),
+        backgroundColor: Object.keys(spendingByCategory).map(category => 
+          isDark ? categoryColors[category]?.dark || categoryColors.Other.dark 
+                : categoryColors[category]?.light || categoryColors.Other.light
+        ),
+        borderColor: Object.keys(spendingByCategory).map(category => 
+          categoryBorders[category] || categoryBorders.Other
+        ),
+        borderWidth: 1,
+      },
+    ],
+  };
 
-    // Budget vs Actual Bar Chart
-    if (budgetChartRef.current) {
-      const ctx = budgetChartRef.current.getContext('2d');
-      if (ctx) {
-        new Chart(ctx, {
-          type: 'bar',
-          data: budgetData,
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'Budget vs Actual Spending',
-                color: '#E5E7EB'
-              },
-              legend: {
-                labels: {
-                  color: '#E5E7EB'
-                }
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                grid: {
-                  color: '#374151'
-                },
-                ticks: {
-                  color: '#E5E7EB'
-                }
-              },
-              x: {
-                grid: {
-                  color: '#374151'
-                },
-                ticks: {
-                  color: '#E5E7EB'
-                }
-              }
-            }
-          }
-        });
-      }
-    }
-
-    // Revenue Stacked Bar Chart
-    if (revenueChartRef.current) {
-      const ctx = revenueChartRef.current.getContext('2d');
-      if (ctx) {
-        new Chart(ctx, {
-          type: 'bar',
-          data: revenueData,
-          options: {
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: 'Monthly Revenue Breakdown',
-                color: '#E5E7EB'
-              },
-              legend: {
-                labels: {
-                  color: '#E5E7EB'
-                }
-              }
-            },
-            scales: {
-              y: {
-                stacked: true,
-                beginAtZero: true,
-                grid: {
-                  color: '#374151'
-                },
-                ticks: {
-                  color: '#E5E7EB'
-                }
-              },
-              x: {
-                stacked: true,
-                grid: {
-                  color: '#374151'
-                },
-                ticks: {
-                  color: '#E5E7EB'
-                }
-              }
-            }
-          }
-        });
-      }
-    }
-  }, [monthlyData, categoryData, budgetData, revenueData]);
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+        labels: {
+          color: isDark ? '#fff' : '#000',
+        },
+      },
+      title: {
+        display: true,
+        text: 'Spending by Category',
+        color: isDark ? '#fff' : '#000',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          color: isDark ? '#fff' : '#000',
+        },
+      },
+      x: {
+        grid: {
+          color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          color: isDark ? '#fff' : '#000',
+        },
+      },
+    },
+  };
 
   return (
-    <div className="relative grid grid-cols-1 gap-6 mt-8">
-      <OrbBackground />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Monthly Spending Trends */}
-        <div className="bg-dark-card rounded-lg shadow-lg p-6 w-full">
-          <canvas ref={monthlyChartRef} />
-        </div>
-
-        {/* Category-wise Spending */}
-        <div className="bg-dark-card rounded-lg shadow-lg p-6 w-full">
-          <canvas ref={categoryChartRef} />
-        </div>
-      </div>
-
-      {/* Budget vs Actual */}
-      <div className="bg-dark-card rounded-lg shadow-lg p-6">
-        <canvas ref={budgetChartRef} />
-      </div>
-
-      {/* Revenue Breakdown */}
-      <div className="bg-dark-card rounded-lg shadow-lg p-6">
-        <canvas ref={revenueChartRef} />
-      </div>
+    <div className="w-full p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      <Bar data={chartData} options={options} />
     </div>
   );
 }
