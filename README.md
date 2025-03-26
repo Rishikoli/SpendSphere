@@ -33,7 +33,6 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 
 > **Note**: This project uses the `gemini-2-flash` model for faster and more efficient AI recommendations. Make sure you have access to this model in your Gemini API subscription.
 
-Create `.env.production` with production values.
 
 3. Install dependencies:
 ```bash
