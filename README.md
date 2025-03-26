@@ -24,7 +24,7 @@ npm run dev
 
 2. Create environment files:
 
-Create `.env.development` with these variables:
+Create `.env.local` with these variables:
 ```env
 NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
 NEXT_PUBLIC_GEMINI_MODEL=gemini-2-flash  # Specific Gemini model for better performance
