@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaMagic, FaSync } from 'react-icons/fa';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
@@ -29,6 +29,12 @@ interface BudgetPlans {
   monthlyBudgetPlan: {
     budgetPlans: BudgetPlan[];
   };
+}
+
+interface AIInsight {
+  title: string;
+  description: string;
+  type: 'positive' | 'warning' | 'neutral';
 }
 
 const defaultBudgetPlans: BudgetPlans = {
@@ -185,6 +191,10 @@ Consider:
       setIsGenerating(false);
     }
   };
+
+  useEffect(() => {
+    // Removed getAIInsight call
+  }, [transactions]);
 
   return (
     <div className="bg-dark-card rounded-lg shadow-lg p-6">
