@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS } from 'chart.js/auto';
 import { useTheme } from 'next-themes';
+import type { ChartData, ChartOptions } from 'chart.js';
 
 interface SpendingChartsProps {
   transactions: {
@@ -47,9 +47,7 @@ const categoryBorders: CategoryBorders = {
 };
 
 export default function SpendingCharts({
-  transactions,
-  monthlyIncome,
-  monthlyBudget,
+  transactions
 }: SpendingChartsProps) {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -64,7 +62,7 @@ export default function SpendingCharts({
     }, {} as { [key: string]: number });
 
   // Prepare data for the chart
-  const chartData = {
+  const chartData: ChartData<'bar'> = {
     labels: Object.keys(spendingByCategory),
     datasets: [
       {
@@ -82,7 +80,7 @@ export default function SpendingCharts({
     ],
   };
 
-  const options = {
+  const options: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
       legend: {
