@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { FaPaperPlane, FaRobot } from 'react-icons/fa';
+import RotatingText from './RotatingText';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -104,6 +105,14 @@ const FinanceBot: React.FC<FinanceBotProps> = ({ apiKey, transactions, monthlyIn
     }
   };
 
+  const rotatingTexts = [
+    "Create your budget with your financial assistant...",
+    "Track your expenses effortlessly...",
+    "Get personalized financial insights...",
+    "Plan your savings journey...",
+    "Analyze your spending patterns..."
+  ];
+
   return (
     <div className="bg-dark-card rounded-lg shadow-lg h-[500px] flex flex-col">
       <div className="p-4 border-b border-gray-700 flex items-center space-x-2">
@@ -112,7 +121,6 @@ const FinanceBot: React.FC<FinanceBotProps> = ({ apiKey, transactions, monthlyIn
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* <h1 className="text-xl font-bold text-dark-text">Chat with Finance Assistant</h1> */}
         {messages.map((message, index) => (
           <div
             key={index}
@@ -126,6 +134,30 @@ const FinanceBot: React.FC<FinanceBotProps> = ({ apiKey, transactions, monthlyIn
               }`}
             >
               {message.content}
+              {index === 0 && (
+                <div className="mt-4 text-sm text-gray-600">
+                  <p className="mb-2">I can help you with:</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Analyzing your spending patterns</li>
+                    <li>Providing budget recommendations</li>
+                    <li>Answering questions about your finances</li>
+                    <li>Offering financial tips and insights</li>
+                  </ul>
+                  <div className="mt-4">
+                    <RotatingText
+                      texts={rotatingTexts}
+                      rotationInterval={3000}
+                      splitBy="characters"
+                      transition={{
+                        type: "spring",
+                        damping: 20,
+                        stiffness: 300
+                      }}
+                      mainClassName="text-blue-500 font-medium"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ))}
