@@ -22,6 +22,15 @@ interface BudgetRecommendation {
   explanation: string;
 }
 
+interface AIResponse {
+  recommendations: Array<{
+    category: string;
+    recommendedAmount: string | number;
+    explanation: string;
+  }>;
+  generalAdvice: string;
+}
+
 const AIBudgetRecommendations: React.FC<AIBudgetRecommendationsProps> = ({ 
   transactions, 
   monthlyIncome,
@@ -72,9 +81,9 @@ Provide recommendations in this JSON format:
       // Extract JSON from the response
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
-        const data = JSON.parse(jsonMatch[0]);
+        const data = JSON.parse(jsonMatch[0]) as AIResponse;
         // Ensure all recommendedAmount values are numbers
-        const validatedRecommendations = data.recommendations.map((rec: any) => ({
+        const validatedRecommendations = data.recommendations.map((rec) => ({
           ...rec,
           recommendedAmount: Number(rec.recommendedAmount) || 0
         }));

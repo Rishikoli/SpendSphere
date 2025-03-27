@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import BillScanner from "@/components/BillScanner";
 import ExpenseAnalytics from "@/components/ExpenseAnalytics";
@@ -67,7 +66,7 @@ export default function Home() {
     category: "Other",
   });
 
-  const [geminiApiKey, setGeminiApiKey] = useState<string>(
+  const [geminiApiKey] = useState<string>(
     process.env.NEXT_PUBLIC_GEMINI_API_KEY || ''
   );
 

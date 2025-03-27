@@ -31,12 +31,6 @@ interface BudgetPlans {
   };
 }
 
-interface AIInsight {
-  title: string;
-  description: string;
-  type: 'positive' | 'warning' | 'neutral';
-}
-
 const defaultBudgetPlans: BudgetPlans = {
   weeklyBudgetPlan: {
     budgetPlans: [
